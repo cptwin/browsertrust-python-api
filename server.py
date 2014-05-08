@@ -1,20 +1,28 @@
 #!/usr/bin/python3
+import logging
 
-from bottle import route, run, response, HTTPResponse
+from bottle import route, run, response, abort
 
+api_version = "0.0.2" #API version, please iterate every time you push a version
 hash_storage = {} #storage array for hashes
 
 @route('/')
 def root():
-    return "Welcome to BT API 0.0.1"
+    return "Welcome to BT API " + api_version
 
 @route('/url/<url>', method='GET')
 def hash_get(url):
-    output = outputJSONHashesForURL(url)
-    if(isSHA256Hash(url)):
-        return { "success" : True, "HASHES" : output }
-    else:
-        return { "success" : False, "HASHES" : output }
+    try:
+        output = ""
+        hash_list = hash_storage[url]
+        for hash in hash_list:
+            output.append({"hash":hash})
+        response = {"url":url,"hashes":output}
+        return json.dumps(response)
+    except KeyError:
+        errorOutput = "URL Not in Database"
+        logging.warning(errorOutput)
+        abort(400, errorOutput)
 
 def outputJSONHashesForURL(url):
     output = []
@@ -24,8 +32,8 @@ def outputJSONHashesForURL(url):
     return output
     
 @route('/url/<url>/hash/<myhash>', method='PUT')
-def hashPut(myhash, url):
-    if(is_SHA_256_hash(myhash) and is_SHA_256_hash(url)):
+def hash_put(myhash, url):
+    if(is_sha_256_hash(myhash) and is_sha_256_hash(url)):
         hash_storage[url] = (url, myhash)
         """Either:
         #response.status = 201
@@ -37,7 +45,7 @@ def hashPut(myhash, url):
     else:
         return { "success" : False, "URL" : url,  "HASH" : myhash }
     
-def is_SHA_256_hash(name):
+def is_sha_256_hash(name):
     if len(name) == 64:
         return True
     else:
