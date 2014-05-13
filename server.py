@@ -51,11 +51,10 @@ def hash_put():
         abort(400, "SHA256 Hash not submitted!")
     
 def is_sha_256_hash(name):
-    """Form a complex number.
+    """Check if a string is actually an SHA-256 hash.
 
     Keyword arguments:
-    real -- the real part (default 0.0)
-    imag -- the imaginary part (default 0.0)
+    name -- the string you want to check
     """
     if len(name) == 64:
         return True
