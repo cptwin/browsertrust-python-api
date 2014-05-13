@@ -1,0 +1,10 @@
+curl.exe -X POST -d "{\"url\": \"12345\", \"hash\":\"654321\"}" http://127.0.0.1:8765/url
+#This should submit but return a 400 Error SHA256 Hash not submitted!
+curl.exe -X POST -d "{\"url\": \"12345\", \"hash\":\"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\"}" http://127.0.0.1:8765/url
+#This should submit correctly and return HTTP 200
+curl.exe -X POST -d "{\"url\": \"12345\", \"hash\":\"60303ae22b998861bce3b28f33eec1be758a213c86c93c076dbe9f558c11c752\"}" http://127.0.0.1:8765/url
+#This should submit correctly and return HTTP 200
+curl.exe -X GET http://127.0.0.1:8765/url/12345
+#This should return the two hashes that have been previously submitted
+curl.exe -X GET http://127.0.0.1:8765/url/123456
+#This should submit but return a 400 Error URL not in database!
