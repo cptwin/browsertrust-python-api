@@ -4,14 +4,14 @@ import json
 
 from bottle import route, run, response, abort, post, request
 
-api_version = "0.0.3" #API version, please iterate every time you push a version
+api_version = "0.0.4" #API version, please iterate every time you push a version
 hash_storage = {} #storage array for hashes
 
 @route('/')
 def root():
     return "Welcome to BT API " + api_version
 
-@route('/url/<url>', method='GET')
+@route('/url/<url:re:[^@]*>', method='GET')
 def hash_get(url):
     """Returns all the hashes for a given url.
 
